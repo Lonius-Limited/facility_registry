@@ -2,8 +2,12 @@ __version__ = '0.0.1'
 import frappe
 import requests, json
 from frappe.contacts.doctype.contact.contact import get_default_contact
+from stripe import api_key
 URL ="https://exchange.lonius.cloud"
 API ="/api/method/exchange.api.facility_registry.utils.create_credentials"
+api_key ="ca57caee4c7c51e"
+api_secret ="12174345b1c9a06"
+headers = dict(Authorization=f'token {api_key}:{api_secret}')
 
 def create_facility_user(doc, state):
     if not doc.customer_type=="Company": return
@@ -11,7 +15,7 @@ def create_facility_user(doc, state):
     email = get_facility_email(doc.name)
     facility_name = doc.name
     payload = dict(email=email,facility_name=facility_name)
-    r = requests.post(f"{URL}{API}", data=dict(payload=payload))
+    r = requests.post(f"{URL}{API}", headers=headers, data=dict(payload=payload))
     frappe.msgprint(f"{r.json()}")
     doc.set("facility_access_details",r.json())
 def get_facility_email(facility):
