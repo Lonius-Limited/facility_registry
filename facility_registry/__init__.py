@@ -13,8 +13,9 @@ def create_facility_user(doc, state):
     if not doc.customer_type=="Company": return
     if doc.facility_access_details: return
     email = get_facility_email(doc.name)
-    facility_name = doc.name
-    params = dict(email=email,facility_name=facility_name)
+    facility_name = doc.customer_name
+    facility_id = doc.name
+    params = dict(email = email, facility_name = facility_name, facility_id = facility_id)
     r = requests.get(f"{URL}{API}", headers=headers, payload=params)
     frappe.msgprint(f"{r.json()}")
     doc.set("facility_access_details",r.json())
